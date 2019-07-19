@@ -3,18 +3,18 @@
 # Starts Xorg
 #
 
-BIN=/usr/bin/Xorg
+BIN=/usr/bin/startx
 PIDFILE=/var/run/xorg.pid
 
 # ":0.0 vt01" makes sure Xorg finds the correct terminal.
 # -allowMouseOpenFail allows the server to start up even if the mouse device
 #   can't be opened or initialised.
 # -noreset prevents a server reset when the last client connection is closed.
-XORG_ARGS=":0.0 vt01 -s 0 -noreset -allowMouseOpenFail"
+# XORG_ARGS=":0.0 vt01 -s 0 -noreset -allowMouseOpenFail"
 
 start() {
 	printf "Starting Xorg: "
-	start-stop-daemon -S -q -b -m -p $PIDFILE --exec $BIN -- $XORG_ARGS
+	start-stop-daemon -S -q -b -m -p $PIDFILE --exec $BIN
 	[ $? = 0 ] && sleep 3 && echo "OK" || echo "FAIL"
 }
 
