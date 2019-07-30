@@ -2,6 +2,7 @@ config BR2_PACKAGE_SINGULARITY
 	bool "singularity"
 	depends on BR2_PACKAGE_HOST_GO_TARGET_ARCH_SUPPORTS
 	depends on BR2_PACKAGE_HOST_GO_TARGET_CGO_LINKING_SUPPORTS
+	depends on BR2_PACKAGE_CA_CERTIFICATES
 	help
           Sylabs Singularity container
           https://github.com/sylabs/singularity
@@ -9,3 +10,4 @@ config BR2_PACKAGE_SINGULARITY
 comment "Singularity requirements:"
 	depends on BR2_PACKAGE_HOST_GO_TARGET_ARCH_SUPPORTS
 	depends on BR2_PACKAGE_HOST_GO_TARGET_CGO_LINKING_SUPPORTS
+	depends on BR2_PACKAGE_CA_CERTIFICATES
