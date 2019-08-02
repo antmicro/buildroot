@@ -78,7 +78,8 @@ endif
 GLIBC_CONF_ENV = \
 	ac_cv_path_BASH_SHELL=/bin/$(if $(BR2_PACKAGE_BASH),bash,sh) \
 	libc_cv_forced_unwind=yes \
-	libc_cv_ssp=no
+	libc_cv_ssp=no \
+	use_ldconfig=yes
 
 # POSIX shell does not support localization, so remove the corresponding
 # syntax from ldd if bash is not selected.
@@ -171,6 +172,8 @@ define GLIBC_INSTALL_TARGET_CMDS
 	$(foreach util,$(GLIBC_TARGET_UTILS_SBIN), \
 		$(INSTALL) -D -m 0755 $(@D)/build/$(util) $(TARGET_DIR)/sbin/$(notdir $(util))
 	)
+	$(INSTALL) -D -m 0755 $(@D)/build/elf/ldconfig $(TARGET_DIR)/sbin/ldconfig
+	touch $(TARGET_DIR)/etc/ld.so.conf
 endef
 
 $(eval $(autotools-package))
