@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-NVIDIA_DRIVER_VERSION = 430.34
+NVIDIA_DRIVER_VERSION = 435.17
 NVIDIA_DRIVER_SUFFIX = $(if $(BR2_x86_64),_64)
 NVIDIA_DRIVER_SITE = http://download.nvidia.com/XFree86/Linux-x86$(NVIDIA_DRIVER_SUFFIX)/$(NVIDIA_DRIVER_VERSION)
 NVIDIA_DRIVER_SOURCE = NVIDIA-Linux-x86$(NVIDIA_DRIVER_SUFFIX)-$(NVIDIA_DRIVER_VERSION).run
@@ -42,7 +42,7 @@ NVIDIA_DRIVER_PROVIDES += libgl libegl libgles
 # So we only install the legacy library for now.
 NVIDIA_DRIVER_LIBS_GL = \
 	libGLX.so.0 \
-	libGL.so.$(NVIDIA_DRIVER_VERSION) \
+	libGL.so.1.7.0 \
 	libGLX_nvidia.so.$(NVIDIA_DRIVER_VERSION)
 
 NVIDIA_DRIVER_LIBS_EGL = \
@@ -58,7 +58,7 @@ NVIDIA_DRIVER_LIBS_GLES = \
 
 NVIDIA_DRIVER_LIBS_MISC = \
 	libnvidia-eglcore.so.$(NVIDIA_DRIVER_VERSION) \
-	libnvidia-egl-wayland.so.1.1.2 \
+	libnvidia-egl-wayland.so.1.1.3 \
 	libnvidia-glcore.so.$(NVIDIA_DRIVER_VERSION) \
 	libnvidia-glsi.so.$(NVIDIA_DRIVER_VERSION) \
 	libnvidia-tls.so.$(NVIDIA_DRIVER_VERSION) \
@@ -93,8 +93,9 @@ endif
 
 # We refer to the destination path; the origin file has no directory component
 NVIDIA_DRIVER_X_MODS = \
-	drivers/nvidia_drv.so
-
+	drivers/nvidia_drv.so \
+    extensions/libglxserver_nvidia.so.$(NVIDIA_DRIVER_VERSION)
+    
 endif # X drivers
 
 ifeq ($(BR2_PACKAGE_NVIDIA_DRIVER_CUDA),y)
