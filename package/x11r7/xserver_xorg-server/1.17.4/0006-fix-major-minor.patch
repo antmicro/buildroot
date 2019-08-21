@@ -1,0 +1,23 @@
+Add sysmacros.h include
+
+Signed-off-by: Peter Gielda <pgielda@antmicro.com>
+---
+ hw/xfree86/common/xf86.h |    1 +
+ 1 files changed, 1 insertions(+), 0 deletion(-)
+
+diff -r -u a/hw/xfree86/common/xf86.h b/hw/xfree86/common/xf86.h
+--- a/hw/xfree86/common/xf86.h	2015-10-27 21:12:00.000000000 +0100
++++ b/hw/xfree86/common/xf86.h	2019-08-21 11:04:29.136579400 +0200
+@@ -51,6 +51,8 @@
+ 
+ #include "propertyst.h"
+ 
++#include <sys/sysmacros.h>
++
+ /* General parameters */
+ extern _X_EXPORT int xf86DoConfigure;
+ extern _X_EXPORT int xf86DoShowOptions;
+
+-- 
+2.11.0
+
