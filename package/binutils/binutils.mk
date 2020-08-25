@@ -130,7 +130,7 @@ HOST_BINUTILS_EXTRA_DOWNLOADS += $(ARCH_XTENSA_OVERLAY_URL)
 endif
 
 ifeq ($(BR2_BINUTILS_ENABLE_LTO),y)
-HOST_BINUTILS_CONF_OPTS += --enable-plugins --enable-lto
+HOST_BINUTILS_CONF_OPTS += --enable-plugins --enable-lto --enable-gold
 endif
 
 # Hardlinks between binaries in different directories cause a problem

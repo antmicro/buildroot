@@ -155,7 +155,7 @@ HOST_GCC_COMMON_CONF_OPTS += --enable-tls
 endif
 
 ifeq ($(BR2_GCC_ENABLE_LTO),y)
-HOST_GCC_COMMON_CONF_OPTS += --enable-plugins --enable-lto
+HOST_GCC_COMMON_CONF_OPTS += --enable-plugins --enable-lto --enable-gold
 endif
 
 ifeq ($(BR2_PTHREADS_NONE),y)
