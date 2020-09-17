@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-NVIDIA_DRIVER_VERSION = 435.17
+NVIDIA_DRIVER_VERSION = 450.66
 NVIDIA_DRIVER_SUFFIX = $(if $(BR2_x86_64),_64)
 NVIDIA_DRIVER_SITE = http://download.nvidia.com/XFree86/Linux-x86$(NVIDIA_DRIVER_SUFFIX)/$(NVIDIA_DRIVER_VERSION)
 NVIDIA_DRIVER_SOURCE = NVIDIA-Linux-x86$(NVIDIA_DRIVER_SUFFIX)-$(NVIDIA_DRIVER_VERSION).run
@@ -43,6 +43,7 @@ NVIDIA_DRIVER_PROVIDES += libgl libegl libgles
 NVIDIA_DRIVER_LIBS_GL = \
 	libGLX.so.0 \
 	libGL.so.1.7.0 \
+	libOpenGL.so.0 \
 	libGLX_nvidia.so.$(NVIDIA_DRIVER_VERSION)
 
 NVIDIA_DRIVER_LIBS_EGL = \
@@ -58,12 +59,21 @@ NVIDIA_DRIVER_LIBS_GLES = \
 
 NVIDIA_DRIVER_LIBS_MISC = \
 	libnvidia-eglcore.so.$(NVIDIA_DRIVER_VERSION) \
-	libnvidia-egl-wayland.so.1.1.3 \
+	libnvidia-allocator.so.$(NVIDIA_DRIVER_VERSION) \
+	libnvidia-cbl.so.$(NVIDIA_DRIVER_VERSION) \
+	libnvidia-cfg.so.$(NVIDIA_DRIVER_VERSION) \
+	libnvidia-egl-wayland.so.1.1.4 \
 	libnvidia-glcore.so.$(NVIDIA_DRIVER_VERSION) \
 	libnvidia-glsi.so.$(NVIDIA_DRIVER_VERSION) \
+	libnvidia-glvkspirv.so.$(NVIDIA_DRIVER_VERSION) \
+	libnvidia-gtk2.so.$(NVIDIA_DRIVER_VERSION) \
+	libnvidia-gtk3.so.$(NVIDIA_DRIVER_VERSION) \
 	libnvidia-tls.so.$(NVIDIA_DRIVER_VERSION) \
 	libvdpau_nvidia.so.$(NVIDIA_DRIVER_VERSION) \
-	libnvidia-ml.so.$(NVIDIA_DRIVER_VERSION)
+	libnvidia-ml.so.$(NVIDIA_DRIVER_VERSION) \
+	libnvidia-opticalflow.so.$(NVIDIA_DRIVER_VERSION) \
+	libnvoptix.so.$(NVIDIA_DRIVER_VERSION) \
+	libnvidia-ngx.so.$(NVIDIA_DRIVER_VERSION)
 
 NVIDIA_DRIVER_LIBS += \
 	$(NVIDIA_DRIVER_LIBS_GL) \
@@ -72,14 +82,14 @@ NVIDIA_DRIVER_LIBS += \
 	$(NVIDIA_DRIVER_LIBS_MISC)
 
 # Install the gl.pc file
-define NVIDIA_DRIVER_INSTALL_GL_DEV
-	$(INSTALL) -D -m 0644 $(@D)/libGL.la $(STAGING_DIR)/usr/lib/libGL.la
-	$(SED) 's:__GENERATED_BY__:Buildroot:' $(STAGING_DIR)/usr/lib/libGL.la
-	$(SED) 's:__LIBGL_PATH__:/usr/lib:' $(STAGING_DIR)/usr/lib/libGL.la
-	$(SED) 's:-L[^[:space:]]\+::' $(STAGING_DIR)/usr/lib/libGL.la
-	$(INSTALL) -D -m 0644 package/nvidia-driver/gl.pc $(STAGING_DIR)/usr/lib/pkgconfig/gl.pc
-	$(INSTALL) -D -m 0644 package/nvidia-driver/egl.pc $(STAGING_DIR)/usr/lib/pkgconfig/egl.pc
-endef
+# define NVIDIA_DRIVER_INSTALL_GL_DEV
+# 	$(INSTALL) -D -m 0644 $(@D)/libGL.la $(STAGING_DIR)/usr/lib/libGL.la
+# 	$(SED) 's:__GENERATED_BY__:Buildroot:' $(STAGING_DIR)/usr/lib/libGL.la
+# 	$(SED) 's:__LIBGL_PATH__:/usr/lib:' $(STAGING_DIR)/usr/lib/libGL.la
+# 	$(SED) 's:-L[^[:space:]]\+::' $(STAGING_DIR)/usr/lib/libGL.la
+# 	$(INSTALL) -D -m 0644 package/nvidia-driver/gl.pc $(STAGING_DIR)/usr/lib/pkgconfig/gl.pc
+# 	$(INSTALL) -D -m 0644 package/nvidia-driver/egl.pc $(STAGING_DIR)/usr/lib/pkgconfig/egl.pc
+# endef
 
 # Those libraries are 'private' libraries requiring an agreement with
 # NVidia to develop code for those libs. There seems to be no restriction
@@ -103,11 +113,11 @@ NVIDIA_DRIVER_LIBS += \
 	libcuda.so.$(NVIDIA_DRIVER_VERSION) \
 	libnvidia-compiler.so.$(NVIDIA_DRIVER_VERSION) \
 	libnvcuvid.so.$(NVIDIA_DRIVER_VERSION) \
-	libnvidia-fatbinaryloader.so.$(NVIDIA_DRIVER_VERSION) \
 	libnvidia-ptxjitcompiler.so.$(NVIDIA_DRIVER_VERSION) \
-	libnvidia-encode.so.$(NVIDIA_DRIVER_VERSION)
+	libnvidia-encode.so.$(NVIDIA_DRIVER_VERSION) \
+	libnvidia-rtcore.so.$(NVIDIA_DRIVER_VERSION)
 ifeq ($(BR2_PACKAGE_NVIDIA_DRIVER_CUDA_PROGS),y)
-NVIDIA_DRIVER_PROGS = nvidia-cuda-mps-control nvidia-cuda-mps-server nvidia-smi
+NVIDIA_DRIVER_PROGS = nvidia-cuda-mps-control nvidia-cuda-mps-server nvidia-smi nvidia-xconfig nvidia-settings nvidia-modprobe
 endif
 endif
 
