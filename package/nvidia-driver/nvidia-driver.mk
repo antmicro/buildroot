@@ -20,8 +20,9 @@ ifeq ($(BR2_PACKAGE_NVIDIA_DRIVER_XORG),y)
 # are build dependencies of packages that depend on nvidia-driver, so
 # they should be built prior to those packages, and the only simple
 # way to do so is to make nvidia-driver depend on them.
-NVIDIA_DRIVER_PROVIDES += libgl libegl libgles
 NVIDIA_DRIVER_DEPENDENCIES += mesa3d xlib_libX11 xlib_libXext
+# TODO fix provides list so it can provide libgl along with mesa
+# NVIDIA_DRIVER_PROVIDES += libgl libegl libgles
 
 # libGL.so.$(NVIDIA_DRIVER_VERSION) is the legacy libGL.so library; it
 # has been replaced with libGL.so.1.0.0. Installing both is technically
