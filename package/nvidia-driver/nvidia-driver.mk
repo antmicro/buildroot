@@ -20,7 +20,7 @@ ifeq ($(BR2_PACKAGE_NVIDIA_DRIVER_XORG),y)
 # are build dependencies of packages that depend on nvidia-driver, so
 # they should be built prior to those packages, and the only simple
 # way to do so is to make nvidia-driver depend on them.
-NVIDIA_DRIVER_DEPENDENCIES += mesa3d xlib_libX11 xlib_libXext
+NVIDIA_DRIVER_DEPENDENCIES += mesa3d xlib_libX11 xlib_libXext libglvnd
 # TODO fix provides list so it can provide libgl along with mesa
 # NVIDIA_DRIVER_PROVIDES += libgl libegl libgles
 
@@ -42,19 +42,15 @@ NVIDIA_DRIVER_DEPENDENCIES += mesa3d xlib_libX11 xlib_libXext
 #
 # So we only install the legacy library for now.
 NVIDIA_DRIVER_LIBS_GL = \
-	libGLX.so.0 \
 	libGL.so.1.7.0 \
 	libOpenGL.so.0 \
 	libGLX_nvidia.so.$(NVIDIA_DRIVER_VERSION)
 
 NVIDIA_DRIVER_LIBS_EGL = \
-	libEGL.so.1.1.0 \
 	libGLdispatch.so.0 \
 	libEGL_nvidia.so.$(NVIDIA_DRIVER_VERSION)
 
 NVIDIA_DRIVER_LIBS_GLES = \
-	libGLESv1_CM.so.1.2.0 \
-	libGLESv2.so.2.1.0 \
 	libGLESv1_CM_nvidia.so.$(NVIDIA_DRIVER_VERSION) \
 	libGLESv2_nvidia.so.$(NVIDIA_DRIVER_VERSION)
 
@@ -104,8 +100,8 @@ endif
 
 # We refer to the destination path; the origin file has no directory component
 NVIDIA_DRIVER_X_MODS = \
-	drivers/nvidia_drv.so \
-    extensions/libglxserver_nvidia.so.$(NVIDIA_DRIVER_VERSION)
+	xorg/modules/drivers/nvidia_drv.so \
+    nvidia/xorg/libglxserver_nvidia.so.$(NVIDIA_DRIVER_VERSION)
     
 endif # X drivers
 
@@ -196,12 +192,15 @@ define NVIDIA_DRIVER_INSTALL_TARGET_CMDS
 	$(call NVIDIA_DRIVER_INSTALL_LIBS,$(TARGET_DIR))
 	$(foreach m,$(NVIDIA_DRIVER_X_MODS), \
 		$(INSTALL) -D -m 0644 $(@D)/$(notdir $(m)) \
-			$(TARGET_DIR)/usr/lib/xorg/modules/$(m)
+			$(TARGET_DIR)/usr/lib/$(m)
 	)
 	$(foreach p,$(NVIDIA_DRIVER_PROGS), \
 		$(INSTALL) -D -m 0755 $(@D)/$(p) \
 			$(TARGET_DIR)/usr/bin/$(p)
 	)
+	$(INSTALL) -D -m 0644 $(@D)/10_nvidia.json $(TARGET_DIR)/usr/share/glvnd/egl_vendor.d/10_nvidia.json
+	ln -sf libglxserver_nvidia.so.$(NVIDIA_DRIVER_VERSION) $(TARGET_DIR)/usr/lib/nvidia/xorg/libglxserver_nvidia.so.1
+	ln -sf libglxserver_nvidia.so.$(NVIDIA_DRIVER_VERSION) $(TARGET_DIR)/usr/lib/nvidia/xorg/libglxserver_nvidia.so
 	$(NVIDIA_DRIVER_INSTALL_KERNEL_MODULE)
 endef
 

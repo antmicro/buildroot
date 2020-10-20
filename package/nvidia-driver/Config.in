@@ -32,13 +32,13 @@ config BR2_PACKAGE_NVIDIA_DRIVER_XORG
 if BR2_PACKAGE_NVIDIA_DRIVER_XORG
 
 config BR2_PACKAGE_PROVIDES_LIBGL
-	default "nvidia-driver"
+	default "nvidia-driver" if !BR2_PACKAGE_LIBGLVND
 
 config BR2_PACKAGE_PROVIDES_LIBEGL
-	default "nvidia-driver"
+	default "nvidia-driver" if !BR2_PACKAGE_LIBGLVND
 
 config BR2_PACKAGE_PROVIDES_LIBGLES
-	default "nvidia-driver"
+	default "nvidia-driver" if !BR2_PACKAGE_LIBGLVND
 
 config BR2_PACKAGE_NVIDIA_DRIVER_PRIVATE_LIBS
 	bool "Install private libraries"

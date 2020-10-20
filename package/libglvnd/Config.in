@@ -1,0 +1,28 @@
+config BR2_PACKAGE_LIBGLVND
+    bool "libglvnd"
+    select BR2_PACKAGE_XLIB_LIBXEXT
+    select BR2_PACKAGE_XLIB_LIBX11
+    select BR2_PACKAGE_XLIB_XORGPROTO
+    help
+        The GL Vendor-Neutral Dispatch library
+
+        libglvnd is a vendor-neutral dispatch layer for arbitrating OpenGL API 
+        calls between multiple vendors. It allows multiple drivers from 
+        different vendors to coexist on the same filesystem, and determines
+        which vendor to dispatch each API call to at runtime.
+
+        Both GLX and EGL are supported, in any combination with OpenGL and
+        OpenGL ES.
+
+if BR2_PACKAGE_LIBGLVND
+
+config BR2_PACKAGE_PROVIDES_LIBGL
+    default "libglvnd"
+
+config BR2_PACKAGE_PROVIDES_LIBGLES
+    default "libglvnd"
+
+config BR2_PACKAGE_PROVIDES_LIBEGL
+    default "libglvnd"
+
+endif

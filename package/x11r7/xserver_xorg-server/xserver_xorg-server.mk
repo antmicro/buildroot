@@ -97,9 +97,9 @@ else # modular
 XSERVER_XORG_SERVER_CONF_OPTS += --disable-kdrive
 endif
 
-ifeq ($(BR2_PACKAGE_HAS_LIBGL),y)
+ifeq ($(BR2_PACKAGE_MESA3D_DRI_DRIVER),y)
 XSERVER_XORG_SERVER_CONF_OPTS += --enable-dri --enable-glx
-XSERVER_XORG_SERVER_DEPENDENCIES += libgl
+XSERVER_XORG_SERVER_DEPENDENCIES += mesa3d
 else
 XSERVER_XORG_SERVER_CONF_OPTS += --disable-dri --disable-glx
 endif

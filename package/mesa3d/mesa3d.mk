@@ -164,7 +164,7 @@ MESA3D_CONF_OPTS += -Dgallium-va=disabled
 
 # libGL is only provided for a full xorg stack
 ifeq ($(BR2_PACKAGE_MESA3D_OPENGL_GLX),y)
-MESA3D_PROVIDES += libgl
+MESA3D_PROVIDES += $(if $(BR2_PACKAGE_LIBGLVND),,libgl)
 else
 define MESA3D_REMOVE_OPENGL_HEADERS
 	rm -rf $(STAGING_DIR)/usr/include/GL/
@@ -202,7 +202,7 @@ MESA3D_CONF_OPTS += \
 endif
 
 ifeq ($(BR2_PACKAGE_MESA3D_OPENGL_EGL),y)
-MESA3D_PROVIDES += libegl
+MESA3D_PROVIDES += $(if $(BR2_PACKAGE_LIBGLVND),,libegl)
 MESA3D_CONF_OPTS += \
 	-Degl=enabled
 else
@@ -211,8 +211,8 @@ MESA3D_CONF_OPTS += \
 endif
 
 ifeq ($(BR2_PACKAGE_MESA3D_OPENGL_ES),y)
-MESA3D_PROVIDES += libgles
-MESA3D_CONF_OPTS += -Dgles1=enabled -Dgles2=enabled
+MESA3D_PROVIDES += $(if $(BR2_PACKAGE_LIBGLVND),,libgles)
+MESA3D_CONF_OPTS += -Dgles1=true -Dgles2=true
 else
 MESA3D_CONF_OPTS += -Dgles1=disabled -Dgles2=disabled
 endif
@@ -257,6 +257,13 @@ MESA3D_CONF_OPTS += -Dzstd=enabled
 MESA3D_DEPENDENCIES += zstd
 else
 MESA3D_CONF_OPTS += -Dzstd=disabled
+endif
+
+ifeq ($(BR2_PACKAGE_LIBGLVND),y)
+	MESA3D_DEPENDENCIES += libglvnd
+	MESA3D_CONF_OPTS += -Dglvnd=true
+else
+	MESA3D_CONF_OPTS += -Dglvnd=false
 endif
 
 $(eval $(meson-package))
