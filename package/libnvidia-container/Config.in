@@ -1,7 +1,7 @@
 config BR2_PACKAGE_LIBNVIDIA_CONTAINER
-	bool "libnvidia-container"
-	depends on BR2_PACKAGE_LIBCAP
-	depends on BR2_PACKAGE_NVIDIA_DRIVER
-	help
-	  NVIDIA libnvidia-container
-	  https://github.com/NVIDIA/libnvidia-container
+    bool "libnvidia-container"
+    depends on BR2_PACKAGE_LIBCAP
+    depends on BR2_PACKAGE_NVIDIA_DRIVER
+    help
+        NVIDIA libnvidia-container
+        https://github.com/NVIDIA/libnvidia-container

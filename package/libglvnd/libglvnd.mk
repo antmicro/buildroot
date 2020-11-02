@@ -3,15 +3,15 @@ LIBGLVND_SOURCE = libglvnd-v$(LIBGLVND_VERSION).tar.gz
 LIBGLVND_SITE = https://gitlab.freedesktop.org/glvnd/libglvnd/-/archive/v$(LIBGLVND_VERSION)
 
 LIBGLVND_LICENSE = \
-				   libglvnd license, \
-				   Apache-2.0 (Khronos headers), \
-				   MIT (Xorg; mesa; cJSON), \
-				   BSD-1=Clause (uthash)
+                   libglvnd license, \
+                   Apache-2.0 (Khronos headers), \
+                   MIT (Xorg; mesa; cJSON), \
+                   BSD-1=Clause (uthash)
 
 LIBGLVND_LICENSE_FILES = \
-						 README.md \
-						 src/util/uthash/LICENSE \
-						 src/util/cJSON/LICENSE
+                         README.md \
+                         src/util/uthash/LICENSE \
+                         src/util/cJSON/LICENSE
 
 LIBGLVND_INSTALL_STAGING = YES
 

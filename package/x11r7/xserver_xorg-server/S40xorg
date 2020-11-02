@@ -6,12 +6,6 @@
 BIN=/usr/bin/xinit
 PIDFILE=/var/run/xorg.pid
 
-# ":0.0 vt01" makes sure Xorg finds the correct terminal.
-# -allowMouseOpenFail allows the server to start up even if the mouse device
-#   can't be opened or initialised.
-# -noreset prevents a server reset when the last client connection is closed.
-# XORG_ARGS=":0.0 vt01 -s 0 -noreset -allowMouseOpenFail"
-
 start() {
 	printf "Starting Xorg: "
 	cp /etc/X11/xinit/xinitrc $HOME/.xinitrc

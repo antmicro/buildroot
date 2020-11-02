@@ -78,16 +78,6 @@ NVIDIA_DRIVER_LIBS += \
 	$(NVIDIA_DRIVER_LIBS_GLES) \
 	$(NVIDIA_DRIVER_LIBS_MISC)
 
-# Install the gl.pc file
-# define NVIDIA_DRIVER_INSTALL_GL_DEV
-# 	$(INSTALL) -D -m 0644 $(@D)/libGL.la $(STAGING_DIR)/usr/lib/libGL.la
-# 	$(SED) 's:__GENERATED_BY__:Buildroot:' $(STAGING_DIR)/usr/lib/libGL.la
-# 	$(SED) 's:__LIBGL_PATH__:/usr/lib:' $(STAGING_DIR)/usr/lib/libGL.la
-# 	$(SED) 's:-L[^[:space:]]\+::' $(STAGING_DIR)/usr/lib/libGL.la
-# 	$(INSTALL) -D -m 0644 package/nvidia-driver/gl.pc $(STAGING_DIR)/usr/lib/pkgconfig/gl.pc
-# 	$(INSTALL) -D -m 0644 package/nvidia-driver/egl.pc $(STAGING_DIR)/usr/lib/pkgconfig/egl.pc
-# endef
-
 # Those libraries are 'private' libraries requiring an agreement with
 # NVidia to develop code for those libs. There seems to be no restriction
 # on using those libraries (e.g. if the user has such an agreement, or
@@ -101,7 +91,7 @@ endif
 # We refer to the destination path; the origin file has no directory component
 NVIDIA_DRIVER_X_MODS = \
 	xorg/modules/drivers/nvidia_drv.so \
-    nvidia/xorg/libglxserver_nvidia.so.$(NVIDIA_DRIVER_VERSION)
+	nvidia/xorg/libglxserver_nvidia.so.$(NVIDIA_DRIVER_VERSION)
     
 endif # X drivers
 
