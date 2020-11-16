@@ -1,0 +1,35 @@
+From 59ad99b2d5aae491f589b95961f27e21fa71f602 Mon Sep 17 00:00:00 2001
+From: Grzegorz Latosinski <glatosinski@antmicro.com>
+Date: Tue, 17 Nov 2020 13:38:00 +0100
+Subject: [PATCH] xinitrc.cpp: use fluxbox instead of TWM
+
+Signed-off-by: Grzegorz Latosinski <glatosinski@antmicro.com>
+---
+ xinitrc.cpp | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/xinitrc.cpp b/xinitrc.cpp
+index 14d3cbc..9912f3a 100644
+--- a/xinitrc.cpp
++++ b/xinitrc.cpp
+@@ -48,8 +48,12 @@ if [ -d XINITDIR/xinitrc.d ] ; then
+ 	unset f
+ fi
+ 
+-TWM &
+-XCLOCK -geometry 50x50-1+1 &
+-XTERM -geometry 80x50+494+51 &
+-XTERM -geometry 80x20+494-0 &
+-exec XTERM -geometry 80x66+0+0 -name login
++fluxbox -no-toolbar &
++fbpid=$!
++
++sleep 1
++{
++    [ -f /etc/background.jpg ] && fbsetbg /etc/background.jpg
++} &
++
++wait $fbpid
+-- 
+2.29.2
+
