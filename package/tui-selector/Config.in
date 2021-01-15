@@ -1,0 +1,5 @@
+config BR2_PACKAGE_TUI_SELECTOR
+    bool "tui-selector"
+    select BR2_PACKAGE_NCURSES
+    help
+        The TUI menu for selecting executables based on rules files
