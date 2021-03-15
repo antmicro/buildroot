@@ -1,0 +1,11 @@
+--- a/agent/mibgroup/host/data_access/swrun.c	2021-03-15 11:24:02.819640727 +0100
++++ b/agent/mibgroup/host/data_access/swrun.c	2021-03-15 11:24:32.976974737 +0100
+@@ -183,7 +183,7 @@
+     size_t hrSWRunTable_oid_len = OID_LENGTH(hrSWRunTable_oid);
+ 
+     if ( !swrun_cache ) {
+-        swrun_cache = netsnmp_cache_create(30,   /* timeout in seconds */
++        swrun_cache = netsnmp_cache_create(1,   /* timeout in seconds */
+                            _cache_load,  _cache_free,
+                            hrSWRunTable_oid, hrSWRunTable_oid_len);
+         if (swrun_cache)
