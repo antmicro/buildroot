@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-NVIDIA_DRIVER_VERSION = 450.66
+NVIDIA_DRIVER_VERSION = 465.27
 NVIDIA_DRIVER_SUFFIX = $(if $(BR2_x86_64),_64)
 NVIDIA_DRIVER_SITE = http://download.nvidia.com/XFree86/Linux-x86$(NVIDIA_DRIVER_SUFFIX)/$(NVIDIA_DRIVER_VERSION)
 NVIDIA_DRIVER_SOURCE = NVIDIA-Linux-x86$(NVIDIA_DRIVER_SUFFIX)-$(NVIDIA_DRIVER_VERSION).run
@@ -59,7 +59,7 @@ NVIDIA_DRIVER_LIBS_MISC = \
 	libnvidia-allocator.so.$(NVIDIA_DRIVER_VERSION) \
 	libnvidia-cbl.so.$(NVIDIA_DRIVER_VERSION) \
 	libnvidia-cfg.so.$(NVIDIA_DRIVER_VERSION) \
-	libnvidia-egl-wayland.so.1.1.4 \
+	libnvidia-egl-wayland.so.1.1.5 \
 	libnvidia-glcore.so.$(NVIDIA_DRIVER_VERSION) \
 	libnvidia-glsi.so.$(NVIDIA_DRIVER_VERSION) \
 	libnvidia-glvkspirv.so.$(NVIDIA_DRIVER_VERSION) \
@@ -127,10 +127,14 @@ endif
 # They can't do everything like everyone. They need those variables,
 # because they don't recognise the usual variables set by the kernel
 # build system. We also need to tell them what modules to build.
+
+# TODO the compiler used is the same, but the version string differs
+# this may require better fix in the future
 NVIDIA_DRIVER_MODULE_MAKE_OPTS = \
 	NV_KERNEL_SOURCES="$(LINUX_DIR)" \
 	NV_KERNEL_OUTPUT="$(LINUX_DIR)" \
-	NV_KERNEL_MODULES="$(NVIDIA_DRIVER_MODULES)"
+	NV_KERNEL_MODULES="$(NVIDIA_DRIVER_MODULES)" \
+	IGNORE_CC_MISMATCH=1
 
 NVIDIA_DRIVER_MODULE_SUBDIRS = kernel
 
