@@ -1,0 +1,29 @@
+From 249ebcdac987e51237dff6edabf1ca58e8fbd66f Mon Sep 17 00:00:00 2001
+From: Karol Gugala <kgugala@antmicro.com>
+Date: Thu, 25 Nov 2021 11:24:33 +0100
+Subject: [PATCH] linux: do not auto-bind localtime in contain mode
+
+---
+ internal/pkg/runtime/engine/singularity/container_linux.go | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/internal/pkg/runtime/engine/singularity/container_linux.go b/internal/pkg/runtime/engine/singularity/container_linux.go
+index c03d052d3..41fd35054 100644
+--- a/internal/pkg/runtime/engine/singularity/container_linux.go
++++ b/internal/pkg/runtime/engine/singularity/container_linux.go
+@@ -1519,12 +1519,6 @@ func (c *container) addBindsMount(system *mount.System) error {
+ 		if err := system.Points.AddRemount(mount.BindsTag, hostsPath, flags); err != nil {
+ 			return fmt.Errorf("unable to add %s for remount: %s", hostsPath, err)
+ 		}
+-		if err := system.Points.AddBind(mount.BindsTag, localtimePath, localtimePath, flags); err != nil {
+-			return fmt.Errorf("unable to add %s to mount list: %s", hosts, err)
+-		}
+-		if err := system.Points.AddRemount(mount.BindsTag, localtimePath, flags); err != nil {
+-			return fmt.Errorf("unable to add %s for remount: %s", localtimePath, err)
+-		}
+ 		return nil
+ 	}
+ 
+-- 
+2.33.0
+
