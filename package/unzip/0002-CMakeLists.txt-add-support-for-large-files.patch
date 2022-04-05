@@ -1,0 +1,25 @@
+From a1e57b4f050967cb808e198daa99901bfebc0c7e Mon Sep 17 00:00:00 2001
+From: Adam Olech <aolech@antmicro.com>
+Date: Tue, 5 Apr 2022 18:24:14 +0200
+Subject: [PATCH 1/1] CMakeLists.txt: add support for large files
+
+---
+ CMakeLists.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 27951b4..cdd85e8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -8,6 +8,8 @@ if(NOT HAVE_LCHMOD)
+ add_definitions("-DNO_LCHMOD")
+ endif()
+ 
++add_definitions("-DLARGE_FILE_SUPPORT")
++
+ set(UNZIP_SOURCES unzip.c crc32.c crypt.c envargs.c explode.c
+   extract.c fileio.c globals.c inflate.c list.c match.c process.c
+   ttyio.c ubz2err.c unreduce.c unshrink.c zipinfo.c unix/unix.c)
+-- 
+2.30.2
+
