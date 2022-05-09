@@ -1,0 +1,30 @@
+From ed903c0d49532ae6c9699508b86e75f84f412159 Mon Sep 17 00:00:00 2001
+From: Adam Olech <aolech@antmicro.com>
+Date: Mon, 9 May 2022 13:54:37 +0200
+Subject: [PATCH 1/1] CMakeLists.txt: always build without lchmod support
+
+---
+ CMakeLists.txt | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cdd85e8..38a9820 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,13 +1,8 @@
+ cmake_minimum_required(VERSION 2.8)
+-INCLUDE(CheckFunctionExists)
+ 
+ project(unzip C)
+ 
+-CHECK_FUNCTION_EXISTS(lchmod HAVE_LCHMOD)
+-if(NOT HAVE_LCHMOD)
+ add_definitions("-DNO_LCHMOD")
+-endif()
+-
+ add_definitions("-DLARGE_FILE_SUPPORT")
+ 
+ set(UNZIP_SOURCES unzip.c crc32.c crypt.c envargs.c explode.c
+-- 
+2.30.2
+
