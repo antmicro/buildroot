@@ -1,0 +1,73 @@
+From ea8083b2021f9e1acaded96f89ad1a8213e0341f Mon Sep 17 00:00:00 2001
+From: Dave Dykstra <2129743+DrDaveD@users.noreply.github.com>
+Date: Wed, 6 Jan 2021 12:44:17 -0600
+Subject: [PATCH 6/6] add --without-seccomp
+
+---
+ mconfig                        |  4 ++++
+ mlocal/checks/project-post.chk | 20 +++++++++++---------
+ 2 files changed, 15 insertions(+), 9 deletions(-)
+
+diff --git a/mconfig b/mconfig
+index 2ad4f5ffe..ced8b1d19 100755
+--- a/mconfig
++++ b/mconfig
+@@ -59,6 +59,7 @@ fi
+ 
+ with_network=1
+ with_suid=1
++with_seccomp_check=1
+ 
+ prefix=
+ exec_prefix=
+@@ -113,6 +114,7 @@ usage_args () {
+ 	echo "  Singularity options:"
+ 	echo "     --without-suid    do not install SUID binary (linux only)"
+ 	echo "     --without-network do not compile/install network plugins (linux only)"
++	echo "     --without-seccomp do not compile/install seccomp support even if available"
+ 	echo
+ 	echo "  Path modification options:"
+ 	echo "     --prefix         install project in \`prefix'"
+@@ -375,6 +377,8 @@ while [ $# -ne 0 ]; do
+    with_suid=0; shift;;
+   --without-network)
+    with_network=0; shift;;
++  --without-seccomp)
++   with_seccomp_check=0; shift;;
+   -V)
+    if ! echo "$2" | awk '/^-.*/ || /^$/ { exit 2 }'; then
+      echo "error: option requires an argument: $1"
+diff --git a/mlocal/checks/project-post.chk b/mlocal/checks/project-post.chk
+index fe1c7e590..81ad8bf2f 100644
+--- a/mlocal/checks/project-post.chk
++++ b/mlocal/checks/project-post.chk
+@@ -290,15 +290,17 @@ fi
+ ########################
+ # libseccomp dev
+ ########################
+-printf " checking: libseccomp+headers... "
+-seccomp_iflags=`pkg-config --cflags-only-I libseccomp 2>/dev/null || true`
+-if ! printf "#include <seccomp.h>\nint main() { seccomp_syscall_resolve_name(\"read\"); }" | \
+-   $tgtcc $user_cflags $ldflags $seccomp_iflags -x c -o /dev/null - -lseccomp >/dev/null 2>&1; then
+-    tgtstatic=0
+-    echo "no"
+-else
+-    echo "yes"
+-    appsec=1
++if [ "$with_seccomp_check" = "1" ];then
++    printf " checking: libseccomp+headers... "
++    seccomp_iflags=`pkg-config --cflags-only-I libseccomp 2>/dev/null || true`
++    if ! printf "#include <seccomp.h>\nint main() { seccomp_syscall_resolve_name(\"read\"); }" | \
++       $tgtcc $user_cflags $ldflags $seccomp_iflags -x c -o /dev/null - -lseccomp >/dev/null 2>&1; then
++	tgtstatic=0
++	echo "no"
++    else
++	echo "yes"
++	appsec=1
++    fi
+ fi
+ 
+ ########################
+-- 
+2.30.2
+

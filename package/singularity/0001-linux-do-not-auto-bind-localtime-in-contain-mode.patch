@@ -1,7 +1,7 @@
-From 249ebcdac987e51237dff6edabf1ca58e8fbd66f Mon Sep 17 00:00:00 2001
+From 94a8ed23c8877e3c60d945eb1468c1dd48e97cc8 Mon Sep 17 00:00:00 2001
 From: Karol Gugala <kgugala@antmicro.com>
 Date: Thu, 25 Nov 2021 11:24:33 +0100
-Subject: [PATCH] linux: do not auto-bind localtime in contain mode
+Subject: [PATCH 1/6] linux: do not auto-bind localtime in contain mode
 
 ---
  internal/pkg/runtime/engine/singularity/container_linux.go | 6 ------
@@ -25,5 +25,5 @@ index c03d052d3..41fd35054 100644
  	}
  
 -- 
-2.33.0
+2.30.2
 

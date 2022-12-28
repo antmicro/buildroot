@@ -1,0 +1,91 @@
+From d9fa2903865246adc2ef14346c7de558cc777409 Mon Sep 17 00:00:00 2001
+From: Adam Olech <aolech@antmicro.com>
+Date: Tue, 27 Dec 2022 14:20:14 +0100
+Subject: [PATCH 4/6] Export variables for Go and Cgo cross-compilation
+
+---
+ mconfig                   | 15 ++++++++++++++-
+ mlocal/frags/build_cli.mk |  4 ++--
+ 2 files changed, 16 insertions(+), 3 deletions(-)
+
+diff --git a/mconfig b/mconfig
+index 500c1f90f..2ad4f5ffe 100755
+--- a/mconfig
++++ b/mconfig
+@@ -35,6 +35,8 @@ tgtobjcopy=
+ hststatic=0
+ tgtstatic=0
+ 
++tgtgoarch=
++
+ # user_cflags - user-defined CFLAGS without all the cflags_opts
+ user_cflags="$CFLAGS"
+ cflags_opts="-Wall -Werror -Wfatal-errors -Wno-unknown-warning-option \
+@@ -357,6 +359,12 @@ while [ $# -ne 0 ]; do
+      exit
+    fi
+    hstgo="$2"; shift; shift;;
++  --target-goarch)
++   if ! echo "$2" | awk '/^-.*/ || /^$/ { exit 2 }'; then
++     echo "error: option requires an argument: $1"
++     exit
++   fi
++   tgtgoarch="$2"; shift; shift;;
+   -s)
+    hststatic=1; shift;;
+   -S)
+@@ -652,23 +660,28 @@ HOSTOBJCOPY := $hstobjcopy
+ 
+ AR := $tgtar
+ CC := $tgtcc
++CC_FOR_linux_$tgtgoarch := $tgtcc
+ CXX := $tgtcxx
+ LD := $tgtld
+ RANLIB := $tgtranlib
+ SIZE := size
+ OBJCOPY := $tgtobjcopy
++export CC CC_FOR_linux_$tgtgoarch
+ 
+ ARCH := $tgt_arch
+ 
+ CFLAGS := $cflags
+ 
+ GO := $hstgo
++GOARCH := $tgtgoarch
++export GOARCH
+ 
+ CGO_CFLAGS := -include $builddir/config.h $CGO_CFLAGS
+ CGO_LDFLAGS := $CGO_LDFLAGS
+ CGO_CPPFLAGS := $CGO_CPPFLAGS
+ CGO_CXXFLAGS := $CGO_CXXFLAGS
+-export CGO_CFLAGS CGO_LDFLAGS CGO_CPPFLAGS CGO_CXXFLAGS
++CGO_ENABLED := 1
++export CGO_CFLAGS CGO_LDFLAGS CGO_CPPFLAGS CGO_CXXFLAGS CGO_ENABLED
+ EOF
+ 
+ 
+diff --git a/mlocal/frags/build_cli.mk b/mlocal/frags/build_cli.mk
+index 634e9a8b2..e15171cd1 100644
+--- a/mlocal/frags/build_cli.mk
++++ b/mlocal/frags/build_cli.mk
+@@ -42,7 +42,7 @@ $(bash_completion): $(singularity_build_config)
+ 	@echo " GEN" $@
+ 	$(V)rm -f $@
+ 	$(V)mkdir -p $(@D)
+-	$(V)$(GO) run $(GO_MODFLAGS) -tags "$(GO_TAGS)" $(GO_GCFLAGS) $(GO_ASMFLAGS) \
++	$(V)env -u GOARCH CC=$(HOSTCC) $(GO) run $(GO_MODFLAGS) -tags "$(GO_TAGS)" $(GO_GCFLAGS) $(GO_ASMFLAGS) \
+ 		$(SOURCEDIR)/cmd/bash_completion/bash_completion.go $@
+ 
+ bash_completion_INSTALL := $(DESTDIR)$(SYSCONFDIR)/bash_completion.d/singularity
+@@ -64,7 +64,7 @@ old_config := $(config_INSTALL)
+ 
+ $(config): $(singularity_build_config) $(SOURCEDIR)/etc/conf/gen.go $(SOURCEDIR)/pkg/runtime/engine/singularity/config/config.go
+ 	@echo " GEN $@`if [ -n "$(old_config)" ]; then echo " from $(old_config)"; fi`"
+-	$(V)$(GO) run $(GO_MODFLAGS) $(GO_GCFLAGS) $(GO_ASMFLAGS) $(SOURCEDIR)/etc/conf/gen.go \
++	$(V)env -u GOARCH CC=$(HOSTCC) $(GO) run $(GO_MODFLAGS) $(GO_GCFLAGS) $(GO_ASMFLAGS) $(SOURCEDIR)/etc/conf/gen.go \
+ 		$(old_config) $(config)
+ 
+ $(config_INSTALL): $(config)
+-- 
+2.30.2
+

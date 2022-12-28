@@ -1,19 +1,31 @@
 config BR2_PACKAGE_SINGULARITY
-    bool "singularity"
-    depends on BR2_PACKAGE_HOST_GO_TARGET_ARCH_SUPPORTS
-    depends on BR2_PACKAGE_HOST_GO_TARGET_CGO_LINKING_SUPPORTS
-    depends on BR2_PACKAGE_LIBSECCOMP
-    depends on BR2_PACKAGE_CA_CERTIFICATES
-    depends on BR2_TARGET_TZ_INFO
-    depends on BR2_PACKAGE_SQUASHFS
-    help
-        Sylabs Singularity container
-        https://github.com/sylabs/singularity
+	bool "singularity"
+	depends on BR2_PACKAGE_HOST_GO_TARGET_ARCH_SUPPORTS
+	depends on BR2_PACKAGE_HOST_GO_TARGET_CGO_LINKING_SUPPORTS
+	depends on BR2_PACKAGE_LIBSECCOMP
+	depends on BR2_PACKAGE_CA_CERTIFICATES
+	depends on BR2_PACKAGE_OPENSSL
+	depends on BR2_TARGET_TZ_INFO
+	depends on BR2_PACKAGE_UTIL_LINUX
+	depends on BR2_PACKAGE_UTIL_LINUX_LIBUUID
+	depends on BR2_PACKAGE_SQUASHFS
+	depends on BR2_BINUTILS_ENABLE_LTO
+	depends on BR2_GCC_ENABLE_LTO
+	help
+          Sylabs Singularity container
+          https://github.com/sylabs/singularity
 
-comment "Singularity requirements:"
-    depends on BR2_PACKAGE_HOST_GO_TARGET_ARCH_SUPPORTS
-    depends on BR2_PACKAGE_HOST_GO_TARGET_CGO_LINKING_SUPPORTS
-    depends on BR2_PACKAGE_LIBSECCOMP
-    depends on BR2_PACKAGE_CA_CERTIFICATES
-    depends on BR2_TARGET_TZ_INFO
-    depends on BR2_PACKAGE_SQUASHFS
+comment "singularity cannot be cross-compiled to the selected arch"
+	depends on !BR2_PACKAGE_HOST_GO_TARGET_ARCH_SUPPORTS || !BR2_PACKAGE_HOST_GO_TARGET_CGO_LINKING_SUPPORTS
+
+comment "singularity needs gcc and binutils with LTO"
+	depends on !BR2_BINUTILS_ENABLE_LTO || !BR2_GCC_ENABLE_LTO
+
+comment "singularity needs libseccomp, ca-certificates, tzinfo, squashfs, openssl and libuuid"
+	depends on !BR2_PACKAGE_LIBSECCOMP || \
+		!BR2_PACKAGE_CA_CERTIFICATES || \
+		!BR2_TARGET_TZ_INFO || \
+		!BR2_PACKAGE_SQUASHFS || \
+		!BR2_PACKAGE_OPENSSL || \
+		!BR2_PACKAGE_UTIL_LINUX || \
+		!BR2_PACKAGE_UTIL_LINUX_LIBUUID

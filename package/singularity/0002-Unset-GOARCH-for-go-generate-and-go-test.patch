@@ -1,0 +1,47 @@
+From df13815a1511a0ba2edbe4220dc658890abb6460 Mon Sep 17 00:00:00 2001
+From: Adam Olech <aolech@antmicro.com>
+Date: Tue, 27 Dec 2022 11:31:40 +0100
+Subject: [PATCH 2/6] Unset GOARCH for go generate and go test
+
+---
+ mlocal/frags/build_scripts.mk | 4 ++--
+ scripts/go-generate.in        | 1 +
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/mlocal/frags/build_scripts.mk b/mlocal/frags/build_scripts.mk
+index 02ba1c130..b83742566 100644
+--- a/mlocal/frags/build_scripts.mk
++++ b/mlocal/frags/build_scripts.mk
+@@ -8,7 +8,7 @@ $(SOURCEDIR)/scripts/go-test: export GO_TAGS := $(GO_TAGS)
+ $(SOURCEDIR)/scripts/go-test: export SUDO_SCRIPT := $(SOURCEDIR)/scripts/test-sudo
+ $(SOURCEDIR)/scripts/go-test: $(SOURCEDIR)/scripts/go-test.in $(SOURCEDIR)/scripts/expand-env.go
+ 	@echo ' GEN $@'
+-	$(V) $(GO) run $(GO_MODFLAGS) $(SOURCEDIR)/scripts/expand-env.go < $< > $@
++	$(V) env -u GOARCH $(GO) run $(GO_MODFLAGS) $(SOURCEDIR)/scripts/expand-env.go < $< > $@
+ 	$(V) chmod +x $@
+ 
+ ALL += $(SOURCEDIR)/scripts/go-test
+@@ -21,7 +21,7 @@ $(SOURCEDIR)/scripts/go-generate: export GOFLAGS := $(GOFLAGS)
+ $(SOURCEDIR)/scripts/go-generate: export GO_TAGS := $(GO_TAGS)
+ $(SOURCEDIR)/scripts/go-generate: $(SOURCEDIR)/scripts/go-generate.in $(SOURCEDIR)/scripts/expand-env.go
+ 	@echo ' GEN $@'
+-	$(V) $(GO) run $(GO_MODFLAGS) $(SOURCEDIR)/scripts/expand-env.go < $< > $@
++	$(V) env -u GOARCH $(GO) run $(GO_MODFLAGS) $(SOURCEDIR)/scripts/expand-env.go < $< > $@
+ 	$(V) chmod +x $@
+ 
+ .PHONY: codegen
+diff --git a/scripts/go-generate.in b/scripts/go-generate.in
+index 329453e9e..84a40a425 100644
+--- a/scripts/go-generate.in
++++ b/scripts/go-generate.in
+@@ -5,6 +5,7 @@ export GO111MODULE='@GO111MODULE@'
+ export GO_BUILD_TAGS='@GO_TAGS@'
+ export GOFLAGS='@GOFLAGS@'
+ export GO_TOOL='@GO@'
++unset GOARCH
+ 
+ exec '@GO@' generate \
+ 	-tags '@GO_TAGS@' \
+-- 
+2.30.2
+

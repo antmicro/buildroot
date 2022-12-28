@@ -1,0 +1,29 @@
+From 57b724ac9d70af6e1d170b691032f3fa10485399 Mon Sep 17 00:00:00 2001
+From: Adam Olech <aolech@antmicro.com>
+Date: Mon, 24 Aug 2020 15:56:04 +0200
+Subject: [PATCH 3/6] Specify host go
+
+---
+ mconfig | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/mconfig b/mconfig
+index 8b0ddc854..500c1f90f 100755
+--- a/mconfig
++++ b/mconfig
+@@ -351,6 +351,12 @@ while [ $# -ne 0 ]; do
+      exit
+    fi
+    tgtcxx="$2"; shift; shift;;
++  -G)
++   if ! echo "$2" | awk '/^-.*/ || /^$/ { exit 2 }'; then
++     echo "error: option requires an argument: $1"
++     exit
++   fi
++   hstgo="$2"; shift; shift;;
+   -s)
+    hststatic=1; shift;;
+   -S)
+-- 
+2.30.2
+
