@@ -1,0 +1,5 @@
+config BR2_PACKAGE_PYTHON_SERVIS
+	bool "python-servis"
+	select BR2_PACKAGE_PYTHON_PLOTEXT
+	help
+	  A tool for rendering time series plots in multiple formats.
