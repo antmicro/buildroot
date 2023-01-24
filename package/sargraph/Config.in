@@ -1,0 +1,9 @@
+config BR2_PACKAGE_SARGRAPH
+	bool "sargraph"
+	select BR2_PACKAGE_GNUPLOT
+	select BR2_PACKAGE_PYTHON3
+	select BR2_PACKAGE_SCREEN
+	select BR2_PACKAGE_PYTHON_SERVIS
+	
+	help
+	  This is a simple python tool that uses "sysstat" ("sar") and "gnuplot" to plot cpu and ram usage.
