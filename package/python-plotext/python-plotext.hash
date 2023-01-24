@@ -1,0 +1,5 @@
+# md5, sha256 from https://pypi.org/pypi/plotext/json
+md5  c541b0428c13eb425d109464dec45f89  plotext-5.2.8.tar.gz
+sha256  319a287baabeb8576a711995f973a2eba631c887aa6b0f33ab016f12c50ffebe  plotext-5.2.8.tar.gz
+# Locally computed sha256 checksums
+sha256  42b22c299205a58675060503a3716108be4bff30a1f77b3772e931b8118cfbad  LICENSE
