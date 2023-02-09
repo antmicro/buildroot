@@ -1,0 +1,25 @@
+From 3026bd59163b6cd94fde787039e8d6c9d64784ce Mon Sep 17 00:00:00 2001
+From: Adam Olech <aolech@antmicro.com>
+Date: Fri, 10 Feb 2023 15:27:33 +0100
+Subject: [PATCH 8/8] build_cli.mk: unset GOARCH for manpage generation
+
+---
+ mlocal/frags/build_cli.mk | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mlocal/frags/build_cli.mk b/mlocal/frags/build_cli.mk
+index 5d4b42a29..0c40e9846 100644
+--- a/mlocal/frags/build_cli.mk
++++ b/mlocal/frags/build_cli.mk
+@@ -103,7 +103,7 @@ man_pages := $(BUILDDIR)$(MANDIR)/man1
+ $(man_pages): apptainer
+ 	@echo " MAN" $@
+ 	mkdir -p $@
+-	$(V)$(GO) run $(GO_MODFLAGS) -tags "$(GO_TAGS)" \
++	$(V)env -u GOARCH CC=$(HOSTCC) $(GO) run $(GO_MODFLAGS) -tags "$(GO_TAGS)" \
+ 		$(SOURCEDIR)/cmd/docs/docs.go man --dir $@
+ 	$(V)cd $@;							\
+ 		for M in apptainer*; do					\
+-- 
+2.30.2
+

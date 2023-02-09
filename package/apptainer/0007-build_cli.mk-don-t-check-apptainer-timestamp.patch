@@ -1,0 +1,25 @@
+From 5c34db22f17bf1864025c30ea7b10c60a40da45e Mon Sep 17 00:00:00 2001
+From: Adam Olech <aolech@antmicro.com>
+Date: Fri, 10 Feb 2023 15:22:58 +0100
+Subject: [PATCH 7/8] build_cli.mk: don't check apptainer timestamp
+
+---
+ mlocal/frags/build_cli.mk | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mlocal/frags/build_cli.mk b/mlocal/frags/build_cli.mk
+index 8fdebfa1a..5d4b42a29 100644
+--- a/mlocal/frags/build_cli.mk
++++ b/mlocal/frags/build_cli.mk
+@@ -76,7 +76,7 @@ config_INSTALL := $(DESTDIR)$(SYSCONFDIR)/apptainer/apptainer.conf
+ # override this to empty to avoid merging old configuration settings
+ old_config := $(config_INSTALL)
+ 
+-$(config): $(apptainer)
++$(config): | $(apptainer)
+ 	@echo " GEN $@`if [ -n "$(old_config)" ]; then echo " from $(old_config)"; fi`"
+ 	$(V)$(apptainer) confgen $(old_config) $(config)
+ 
+-- 
+2.30.2
+

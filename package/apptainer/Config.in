@@ -1,0 +1,31 @@
+config BR2_PACKAGE_APPTAINER
+	bool "apptainer"
+	depends on BR2_PACKAGE_HOST_GO_TARGET_ARCH_SUPPORTS
+	depends on BR2_PACKAGE_HOST_GO_TARGET_CGO_LINKING_SUPPORTS
+	depends on BR2_PACKAGE_LIBSECCOMP
+	depends on BR2_PACKAGE_CA_CERTIFICATES
+	depends on BR2_PACKAGE_OPENSSL
+	depends on BR2_TARGET_TZ_INFO
+	depends on BR2_PACKAGE_UTIL_LINUX
+	depends on BR2_PACKAGE_UTIL_LINUX_LIBUUID
+	depends on BR2_PACKAGE_SQUASHFS
+	depends on BR2_BINUTILS_ENABLE_LTO
+	depends on BR2_GCC_ENABLE_LTO
+	help
+          Apptainer: Application containers for Linux
+          https://github.com/apptainer/apptainer
+
+comment "apptainer cannot be cross-compiled to the selected arch"
+	depends on !BR2_PACKAGE_HOST_GO_TARGET_ARCH_SUPPORTS || !BR2_PACKAGE_HOST_GO_TARGET_CGO_LINKING_SUPPORTS
+
+comment "apptainer needs gcc and binutils with LTO"
+	depends on !BR2_BINUTILS_ENABLE_LTO || !BR2_GCC_ENABLE_LTO
+
+comment "apptainer needs libseccomp, ca-certificates, tzinfo, squashfs, openssl and libuuid"
+	depends on !BR2_PACKAGE_LIBSECCOMP || \
+		!BR2_PACKAGE_CA_CERTIFICATES || \
+		!BR2_TARGET_TZ_INFO || \
+		!BR2_PACKAGE_SQUASHFS || \
+		!BR2_PACKAGE_OPENSSL || \
+		!BR2_PACKAGE_UTIL_LINUX || \
+		!BR2_PACKAGE_UTIL_LINUX_LIBUUID

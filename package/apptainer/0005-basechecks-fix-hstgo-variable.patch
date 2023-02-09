@@ -1,0 +1,25 @@
+From 6934b98ad80732ce03d56aa4cc6488d8c9fdf805 Mon Sep 17 00:00:00 2001
+From: Adam Olech <aolech@antmicro.com>
+Date: Thu, 9 Feb 2023 15:16:33 +0100
+Subject: [PATCH 5/8] basechecks: fix hstgo variable
+
+---
+ mlocal/checks/basechecks.chk | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mlocal/checks/basechecks.chk b/mlocal/checks/basechecks.chk
+index 164733a21..469010ba0 100644
+--- a/mlocal/checks/basechecks.chk
++++ b/mlocal/checks/basechecks.chk
+@@ -94,7 +94,7 @@ elif [ "$hstgo" = "" ]; then
+ 	fi
+ else
+ 	printf " checking: host Go compiler (at least version $hstgo_version)... "
+-	if $makeit_scriptsdir/check-min-go-version $go $hstgo_version >/dev/null 2>&1; then
++	if $makeit_scriptsdir/check-min-go-version $hstgo $hstgo_version >/dev/null 2>&1; then
+ 		hstgo=`command -v $hstgo`
+ 		echo $hstgo
+ 	else
+-- 
+2.30.2
+

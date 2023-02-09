@@ -1,0 +1,76 @@
+From 13a1ee26e9854319717684bd119ae858bc985082 Mon Sep 17 00:00:00 2001
+From: Adam Olech <aolech@antmicro.com>
+Date: Mon, 6 Feb 2023 13:54:15 +0100
+Subject: [PATCH 1/8] Handle Docker manifest V2 content-type mismatch
+
+---
+ internal/pkg/build/sources/conveyorPacker_oci.go | 14 +++++++++-----
+ internal/pkg/build/sources/oci_unpack.go         | 10 ++++++++++
+ 2 files changed, 19 insertions(+), 5 deletions(-)
+
+diff --git a/internal/pkg/build/sources/conveyorPacker_oci.go b/internal/pkg/build/sources/conveyorPacker_oci.go
+index 26e90191f..fdc7dd917 100644
+--- a/internal/pkg/build/sources/conveyorPacker_oci.go
++++ b/internal/pkg/build/sources/conveyorPacker_oci.go
+@@ -236,12 +236,12 @@ func (cp *OCIConveyorPacker) Get(ctx context.Context, b *sytypes.Bundle) (err er
+ 
+ 	err = cp.fetch(ctx)
+ 	if err != nil {
+-		return err
++		return fmt.Errorf("oci fetch error: %v", err)
+ 	}
+ 
+ 	cp.imgConfig, err = cp.getConfig(ctx)
+ 	if err != nil {
+-		return err
++		return fmt.Errorf("oci getConfig error: %v", err)
+ 	}
+ 
+ 	return nil
+@@ -294,15 +294,19 @@ func (cp *OCIConveyorPacker) fetch(ctx context.Context) error {
+ func (cp *OCIConveyorPacker) getConfig(ctx context.Context) (imgspecv1.ImageConfig, error) {
+ 	img, err := cp.srcRef.NewImage(ctx, cp.sysCtx)
+ 	if err != nil {
+-		return imgspecv1.ImageConfig{}, err
++		return imgspecv1.ImageConfig{}, fmt.Errorf("getConfig NewImage failed: %v", err)
+ 	}
+ 	defer img.Close()
+ 
+-	imgSpec, err := img.OCIConfig(ctx)
++	cb, err := img.ConfigBlob(ctx)
+ 	if err != nil {
+ 		return imgspecv1.ImageConfig{}, err
+ 	}
+-	return imgSpec.Config, nil
++	configOCI := &imgspecv1.Image{}
++	if err := json.Unmarshal(cb, configOCI); err != nil {
++		return imgspecv1.ImageConfig{}, err
++	}
++	return configOCI.Config, nil
+ }
+ 
+ func (cp *OCIConveyorPacker) insertOCIConfig() error {
+diff --git a/internal/pkg/build/sources/oci_unpack.go b/internal/pkg/build/sources/oci_unpack.go
+index 19155aacd..3081ed2a3 100644
+--- a/internal/pkg/build/sources/oci_unpack.go
++++ b/internal/pkg/build/sources/oci_unpack.go
+@@ -90,6 +90,16 @@ func unpackRootfs(ctx context.Context, b *sytypes.Bundle, tmpfsRef types.ImageRe
+ 	}
+ 	var manifest imgspecv1.Manifest
+ 	json.Unmarshal(manifestData, &manifest)
++	manifest.Config.MediaType = imgspecv1.MediaTypeImageConfig
++
++	for idx, layerDescriptor := range manifest.Layers {
++		switch mediaType := layerDescriptor.MediaType; mediaType {
++		case "application/vnd.docker.image.rootfs.diff.tar.gzip":
++			manifest.Layers[idx].MediaType = "application/vnd.oci.image.layer.v1.tar+gzip"
++		case "application/vnd.docker.image.rootfs.diff.tar":
++			manifest.Layers[idx].MediaType = "application/vnd.oci.image.layer.v1.tar"
++		}
++	}
+ 
+ 	// UnpackRootfs from umoci v0.4.2 expects a path to a non-existing directory
+ 	os.RemoveAll(b.RootfsPath)
+-- 
+2.30.2
+

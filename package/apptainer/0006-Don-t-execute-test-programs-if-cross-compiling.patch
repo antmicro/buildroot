@@ -1,0 +1,63 @@
+From bdc545290b6e4999e047c666afa081a9d188f817 Mon Sep 17 00:00:00 2001
+From: Adam Olech <aolech@antmicro.com>
+Date: Fri, 10 Feb 2023 13:40:33 +0100
+Subject: [PATCH 6/8] Don't execute test programs if cross-compiling
+
+---
+ mlocal/checks/basechecks.chk   | 17 +++++++++++++++++
+ mlocal/checks/project-post.chk |  4 ++--
+ 2 files changed, 19 insertions(+), 2 deletions(-)
+
+diff --git a/mlocal/checks/basechecks.chk b/mlocal/checks/basechecks.chk
+index 469010ba0..21f6e3859 100644
+--- a/mlocal/checks/basechecks.chk
++++ b/mlocal/checks/basechecks.chk
+@@ -460,6 +460,23 @@ fi
+ echo "$short_version"
+ 
+ 
++############################
++# check if cross-compiling
++############################
++printf " checking: if cross-compiling... "
++xcompile=0
++if [ "$tgt_arch" != "$hst_arch" ]; then
++    if [ -z "$tgtgoarch" ]; then
++        echo "cross compiler is set but GOARCH is empty!"
++        exit 2
++    fi
++    xcompile=1
++    echo "yes"
++else
++    echo "no"
++fi
++
++
+ ########################
+ # unprivileged user namespaces
+ ########################
+diff --git a/mlocal/checks/project-post.chk b/mlocal/checks/project-post.chk
+index f2b40b849..d75048c66 100644
+--- a/mlocal/checks/project-post.chk
++++ b/mlocal/checks/project-post.chk
+@@ -195,7 +195,7 @@ if ! $tgtcc -x c -o $testprog ${testprog}.c >/dev/null 2>&1; then
+ 		exit 2;
+ 	fi
+ else
+-    if ! $testprog; then
++    if [ "$xcompile" -eq 0 ] && [ ! $testprog ]; then 
+         echo "ERROR: Kernel does not support NO_NEW_PRIVS. Updated Kernel is required."
+         exit 2;
+     else
+@@ -266,7 +266,7 @@ EOF
+ if ! $tgtcc -x c -o $testprog ${testprog}.c >/dev/null 2>&1; then
+     echo "no"
+ else
+-    if ! $testprog; then
++    if [ "$xcompile" -eq 0 ] && [ ! $testprog ]; then
+         echo "no"
+     else
+         echo "yes"
+-- 
+2.30.2
+
