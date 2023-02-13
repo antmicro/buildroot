@@ -1,0 +1,63 @@
+From caaf0984aa31d8292612a6a8f46ec762ade141bf Mon Sep 17 00:00:00 2001
+From: Adam Olech <aolech@antmicro.com>
+Date: Mon, 13 Feb 2023 15:11:56 +0100
+Subject: [PATCH 9/9] Bring back --nohttps in subcommands
+
+---
+ cmd/internal/cli/build.go  | 1 +
+ cmd/internal/cli/delete.go | 1 +
+ cmd/internal/cli/pull.go   | 1 +
+ cmd/internal/cli/push.go   | 1 +
+ 4 files changed, 4 insertions(+)
+
+diff --git a/cmd/internal/cli/build.go b/cmd/internal/cli/build.go
+index 18d02f9d1..54a8f84ce 100644
+--- a/cmd/internal/cli/build.go
++++ b/cmd/internal/cli/build.go
+@@ -303,6 +303,7 @@ func init() {
+ 		cmdManager.RegisterFlagForCmd(&buildUpdateFlag, buildCmd)
+ 		cmdManager.RegisterFlagForCmd(&commonForceFlag, buildCmd)
+ 		cmdManager.RegisterFlagForCmd(&commonNoHTTPSFlag, buildCmd)
++		cmdManager.RegisterFlagForCmd(&commonOldNoHTTPSFlag, buildCmd)
+ 		cmdManager.RegisterFlagForCmd(&commonTmpDirFlag, buildCmd)
+ 
+ 		cmdManager.RegisterFlagForCmd(&dockerUsernameFlag, buildCmd)
+diff --git a/cmd/internal/cli/delete.go b/cmd/internal/cli/delete.go
+index dc2d7062c..044d039f2 100644
+--- a/cmd/internal/cli/delete.go
++++ b/cmd/internal/cli/delete.go
+@@ -34,6 +34,7 @@ func init() {
+ 		cmdManager.RegisterFlagForCmd(&deleteImageTimeoutFlag, deleteImageCmd)
+ 		cmdManager.RegisterFlagForCmd(&deleteLibraryURIFlag, deleteImageCmd)
+ 		cmdManager.RegisterFlagForCmd(&commonNoHTTPSFlag, deleteImageCmd)
++		cmdManager.RegisterFlagForCmd(&commonOldNoHTTPSFlag, deleteImageCmd)
+ 	})
+ }
+ 
+diff --git a/cmd/internal/cli/pull.go b/cmd/internal/cli/pull.go
+index be1e9a30f..95c7eb437 100644
+--- a/cmd/internal/cli/pull.go
++++ b/cmd/internal/cli/pull.go
+@@ -139,6 +139,7 @@ func init() {
+ 		cmdManager.RegisterFlagForCmd(&pullLibraryURIFlag, PullCmd)
+ 		cmdManager.RegisterFlagForCmd(&pullNameFlag, PullCmd)
+ 		cmdManager.RegisterFlagForCmd(&commonNoHTTPSFlag, PullCmd)
++		cmdManager.RegisterFlagForCmd(&commonOldNoHTTPSFlag, PullCmd)
+ 		cmdManager.RegisterFlagForCmd(&commonTmpDirFlag, PullCmd)
+ 		cmdManager.RegisterFlagForCmd(&pullDisableCacheFlag, PullCmd)
+ 		cmdManager.RegisterFlagForCmd(&pullDirFlag, PullCmd)
+diff --git a/cmd/internal/cli/push.go b/cmd/internal/cli/push.go
+index 53d637e4b..3f88fb30e 100644
+--- a/cmd/internal/cli/push.go
++++ b/cmd/internal/cli/push.go
+@@ -73,6 +73,7 @@ func init() {
+ 		cmdManager.RegisterFlagForCmd(&pushAllowUnsignedFlag, PushCmd)
+ 		cmdManager.RegisterFlagForCmd(&pushDescriptionFlag, PushCmd)
+ 		cmdManager.RegisterFlagForCmd(&commonNoHTTPSFlag, PushCmd)
++		cmdManager.RegisterFlagForCmd(&commonOldNoHTTPSFlag, PushCmd)
+ 
+ 		cmdManager.RegisterFlagForCmd(&dockerUsernameFlag, PushCmd)
+ 		cmdManager.RegisterFlagForCmd(&dockerPasswordFlag, PushCmd)
+-- 
+2.30.2
+

@@ -1,7 +1,7 @@
 From 6934b98ad80732ce03d56aa4cc6488d8c9fdf805 Mon Sep 17 00:00:00 2001
 From: Adam Olech <aolech@antmicro.com>
 Date: Thu, 9 Feb 2023 15:16:33 +0100
-Subject: [PATCH 5/8] basechecks: fix hstgo variable
+Subject: [PATCH 5/9] basechecks: fix hstgo variable
 
 ---
  mlocal/checks/basechecks.chk | 2 +-

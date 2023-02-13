@@ -1,7 +1,7 @@
 From bdc545290b6e4999e047c666afa081a9d188f817 Mon Sep 17 00:00:00 2001
 From: Adam Olech <aolech@antmicro.com>
 Date: Fri, 10 Feb 2023 13:40:33 +0100
-Subject: [PATCH 6/8] Don't execute test programs if cross-compiling
+Subject: [PATCH 6/9] Don't execute test programs if cross-compiling
 
 ---
  mlocal/checks/basechecks.chk   | 17 +++++++++++++++++

@@ -1,7 +1,7 @@
 From 13a1ee26e9854319717684bd119ae858bc985082 Mon Sep 17 00:00:00 2001
 From: Adam Olech <aolech@antmicro.com>
 Date: Mon, 6 Feb 2023 13:54:15 +0100
-Subject: [PATCH 1/8] Handle Docker manifest V2 content-type mismatch
+Subject: [PATCH 1/9] Handle Docker manifest V2 content-type mismatch
 
 ---
  internal/pkg/build/sources/conveyorPacker_oci.go | 14 +++++++++-----
