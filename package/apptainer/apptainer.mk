@@ -32,6 +32,14 @@ else ifeq ($(BR2_mips64el),y)
 	APPTAINER_GOARCH = mips64le
 endif
 
+define APPTAINER_CREATE_SYMLINK
+	ln -sf apptainer $(TARGET_DIR)/usr/bin/singularity
+endef
+
+ifeq ($(BR2_PACKAGE_APPTAINER_SINGULARITY_SYMLINK),y)
+	APPTAINER_POST_INSTALL_TARGET_HOOKS += APPTAINER_CREATE_SYMLINK
+endif
+
 define APPTAINER_WORKSPACE_FIXUP
 	chmod +w -R $(BUILD_DIR)/apptainer-$(APPTAINER_VERSION)/$(APPTAINER_WORKSPACE) 
 endef

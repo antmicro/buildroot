@@ -15,6 +15,16 @@ config BR2_PACKAGE_APPTAINER
           Apptainer: Application containers for Linux
           https://github.com/apptainer/apptainer
 
+if BR2_PACKAGE_APPTAINER
+
+config BR2_PACKAGE_APPTAINER_SINGULARITY_SYMLINK
+	bool "install /usr/bin/singularity -> /usr/bin/apptainer symlink"
+	depends on !BR2_PACKAGE_SINGULARITY
+	help
+	  Ensure backwards compatibility with Singularity by creating a symlink.
+
+endif
+
 comment "apptainer cannot be cross-compiled to the selected arch"
 	depends on !BR2_PACKAGE_HOST_GO_TARGET_ARCH_SUPPORTS || !BR2_PACKAGE_HOST_GO_TARGET_CGO_LINKING_SUPPORTS
 
