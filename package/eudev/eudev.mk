@@ -15,11 +15,11 @@ EUDEV_CONF_OPTS = \
 	--sbindir=/sbin \
 	--libexecdir=/lib \
 	--disable-introspection \
-	--enable-kmod \
+	--disable-kmod \
 	--enable-blkid
 
 # eudev requires only the util-linux libraries at build time
-EUDEV_DEPENDENCIES = host-gperf host-pkgconf util-linux-libs kmod
+EUDEV_DEPENDENCIES = host-gperf host-pkgconf util-linux-libs
 EUDEV_PROVIDES = udev
 
 ifeq ($(BR2_ROOTFS_MERGED_USR),)
