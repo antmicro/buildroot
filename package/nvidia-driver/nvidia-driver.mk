@@ -67,7 +67,6 @@ NVIDIA_DRIVER_LIBS_MISC = \
 	libnvidia-gtk3.so.$(NVIDIA_DRIVER_VERSION) \
 	libnvidia-tls.so.$(NVIDIA_DRIVER_VERSION) \
 	libvdpau_nvidia.so.$(NVIDIA_DRIVER_VERSION) \
-	libnvidia-ml.so.$(NVIDIA_DRIVER_VERSION) \
 	libnvidia-opticalflow.so.$(NVIDIA_DRIVER_VERSION) \
 	libnvoptix.so.$(NVIDIA_DRIVER_VERSION) \
 	libnvidia-ngx.so.$(NVIDIA_DRIVER_VERSION)
@@ -104,6 +103,8 @@ NVIDIA_DRIVER_LIBS += \
 	libnvidia-encode.so.$(NVIDIA_DRIVER_VERSION) \
 	libnvidia-rtcore.so.$(NVIDIA_DRIVER_VERSION)
 ifeq ($(BR2_PACKAGE_NVIDIA_DRIVER_CUDA_PROGS),y)
+NVIDIA_DRIVER_LIBS += \
+	libnvidia-ml.so.$(NVIDIA_DRIVER_VERSION)
 NVIDIA_DRIVER_PROGS = nvidia-cuda-mps-control nvidia-cuda-mps-server nvidia-smi nvidia-xconfig nvidia-settings nvidia-modprobe
 endif
 endif
