@@ -1,7 +1,7 @@
 From 0f43b8b39b1a15132f2d6f063a9c5333b15f3b72 Mon Sep 17 00:00:00 2001
 From: Adam Olech <aolech@antmicro.com>
 Date: Thu, 9 Feb 2023 11:58:17 +0100
-Subject: [PATCH 2/9] Unset GOARCH for go generate and go test
+Subject: [PATCH 02/11] Unset GOARCH for go generate and go test
 
 ---
  mlocal/frags/build_scripts.mk | 4 ++--

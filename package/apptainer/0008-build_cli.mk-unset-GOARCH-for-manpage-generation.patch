@@ -1,7 +1,7 @@
 From 3026bd59163b6cd94fde787039e8d6c9d64784ce Mon Sep 17 00:00:00 2001
 From: Adam Olech <aolech@antmicro.com>
 Date: Fri, 10 Feb 2023 15:27:33 +0100
-Subject: [PATCH 8/9] build_cli.mk: unset GOARCH for manpage generation
+Subject: [PATCH 08/11] build_cli.mk: unset GOARCH for manpage generation
 
 ---
  mlocal/frags/build_cli.mk | 2 +-

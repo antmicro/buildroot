@@ -1,0 +1,110 @@
+From db3512c0d9c75f46b4d9c83f5124f817fa839e7d Mon Sep 17 00:00:00 2001
+From: Adam Olech <aolech@antmicro.com>
+Date: Wed, 15 Mar 2023 10:52:59 +0100
+Subject: [PATCH 10/11] Pass architecture override from command-line parameter
+
+---
+ cmd/internal/cli/build.go            | 12 ++++++++++++
+ cmd/internal/cli/build_linux.go      |  1 +
+ internal/pkg/build/assemblers/sif.go |  9 ++++++++-
+ internal/pkg/build/build.go          |  1 +
+ pkg/build/types/bundle.go            |  2 ++
+ 5 files changed, 24 insertions(+), 1 deletion(-)
+
+diff --git a/cmd/internal/cli/build.go b/cmd/internal/cli/build.go
+index 54a8f84ce..813aa58b1 100644
+--- a/cmd/internal/cli/build.go
++++ b/cmd/internal/cli/build.go
+@@ -52,6 +52,17 @@ var buildArgs struct {
+ 	ignoreFakerootCmd bool // Ignore fakeroot command (hidden)
+ 	ignoreUserns      bool // Ignore user namespace(hidden)
+ 	remote            bool // Remote flag(hidden, only for helpful error message)
++	headerArch        string
++}
++
++// --header-arch
++var buildHeaderArchFlag = cmdline.Flag{
++	ID:           "buildHeaderArchFlag",
++	Value:        &buildArgs.headerArch,
++	DefaultValue: "",
++	Name:         "header-arch",
++	Usage:        "Override architecture in SIF header",
++	EnvKeys:      []string{"HEADERARCH"},
+ }
+ 
+ // -s|--sandbox
+@@ -325,6 +336,7 @@ func init() {
+ 		cmdManager.RegisterFlagForCmd(&buildIgnoreFakerootCommand, buildCmd)
+ 		cmdManager.RegisterFlagForCmd(&buildIgnoreUsernsFlag, buildCmd)
+ 		cmdManager.RegisterFlagForCmd(&buildRemoteFlag, buildCmd)
++		cmdManager.RegisterFlagForCmd(&buildHeaderArchFlag, buildCmd)
+ 	})
+ }
+ 
+diff --git a/cmd/internal/cli/build_linux.go b/cmd/internal/cli/build_linux.go
+index 39b0e28fd..7a7103b2b 100644
+--- a/cmd/internal/cli/build_linux.go
++++ b/cmd/internal/cli/build_linux.go
+@@ -320,6 +320,7 @@ func runBuildLocal(ctx context.Context, cmd *cobra.Command, dst, spec string, fa
+ 				EncryptionKeyInfo: keyInfo,
+ 				FixPerms:          buildArgs.fixPerms,
+ 				SandboxTarget:     sandboxTarget,
++				Arch:              buildArgs.headerArch,
+ 			},
+ 		})
+ 	if err != nil {
+diff --git a/internal/pkg/build/assemblers/sif.go b/internal/pkg/build/assemblers/sif.go
+index ad97f173d..8fe534c23 100644
+--- a/internal/pkg/build/assemblers/sif.go
++++ b/internal/pkg/build/assemblers/sif.go
+@@ -36,6 +36,7 @@ type SIFAssembler struct {
+ 	MksquashfsProcs uint
+ 	MksquashfsMem   string
+ 	MksquashfsPath  string
++	Arch            string
+ }
+ 
+ type encryptionOptions struct {
+@@ -183,7 +184,13 @@ func (a *SIFAssembler) Assemble(b *types.Bundle, path string) error {
+ 	if a.MksquashfsProcs != 0 {
+ 		flags = append(flags, "-processors", fmt.Sprint(a.MksquashfsProcs))
+ 	}
+-	arch := machine.ArchFromContainer(b.RootfsPath)
++
++	var arch string
++	arch = a.Arch
++	if arch == "" {
++		sylog.Infof("Architecture not overriden, try to infer")
++		arch = machine.ArchFromContainer(b.RootfsPath)
++	}
+ 	if arch == "" {
+ 		sylog.Infof("Architecture not recognized, use native")
+ 		arch = runtime.GOARCH
+diff --git a/internal/pkg/build/build.go b/internal/pkg/build/build.go
+index 5414e1740..b0dd889f9 100644
+--- a/internal/pkg/build/build.go
++++ b/internal/pkg/build/build.go
+@@ -211,6 +211,7 @@ func newBuild(defs []types.Definition, conf Config) (*Build, error) {
+ 			MksquashfsProcs: mksquashfsProcs,
+ 			MksquashfsMem:   mksquashfsMem,
+ 			MksquashfsPath:  mksquashfsPath,
++			Arch:            conf.Opts.Arch,
+ 		}
+ 	default:
+ 		return nil, fmt.Errorf("unrecognized output format %s", conf.Format)
+diff --git a/pkg/build/types/bundle.go b/pkg/build/types/bundle.go
+index 6ecee877b..bc6b6b604 100644
+--- a/pkg/build/types/bundle.go
++++ b/pkg/build/types/bundle.go
+@@ -81,6 +81,8 @@ type Options struct {
+ 	// To warn when the above is needed, we need to know if the target of this
+ 	// bundle will be a sandbox
+ 	SandboxTarget bool
++	// Allow to override arch field in SIF header
++	Arch string
+ }
+ 
+ // NewEncryptedBundle creates an Encrypted Bundle environment.
+-- 
+2.30.2
+
