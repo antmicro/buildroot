@@ -1,0 +1,28 @@
+From 6d92dd9b1fa99e471131fc8e49ce9c23cdc78bd4 Mon Sep 17 00:00:00 2001
+From: Adam Olech <aolech@antmicro.com>
+Date: Thu, 20 Apr 2023 16:51:58 +0200
+Subject: [PATCH 12/12] Create ld.cache.so if it doesn't exist
+
+---
+ internal/pkg/util/paths/resolve.go | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/internal/pkg/util/paths/resolve.go b/internal/pkg/util/paths/resolve.go
+index 264576d3c..c6ef24937 100644
+--- a/internal/pkg/util/paths/resolve.go
++++ b/internal/pkg/util/paths/resolve.go
+@@ -167,6 +167,11 @@ func ldCache() (map[string]string, error) {
+ 	if err != nil {
+ 		return nil, err
+ 	}
++	if _, err := os.Stat("/etc/ld.so.cache"); err != nil {
++		if _, err := exec.Command(ldconfig).Output(); err != nil {
++			return nil, fmt.Errorf("could not create ld.so.cache: %v", err)
++		}
++	}
+ 	out, err := exec.Command(ldconfig, "-p").Output()
+ 	if err != nil {
+ 		return nil, fmt.Errorf("could not execute ldconfig: %v", err)
+-- 
+2.30.2
+

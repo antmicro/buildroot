@@ -1,7 +1,7 @@
 From 5c34db22f17bf1864025c30ea7b10c60a40da45e Mon Sep 17 00:00:00 2001
 From: Adam Olech <aolech@antmicro.com>
 Date: Fri, 10 Feb 2023 15:22:58 +0100
-Subject: [PATCH 07/11] build_cli.mk: don't check apptainer timestamp
+Subject: [PATCH 07/12] build_cli.mk: don't check apptainer timestamp
 
 ---
  mlocal/frags/build_cli.mk | 2 +-

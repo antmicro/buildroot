@@ -1,7 +1,7 @@
 From af856a215dbac95239d3d114f2f3c873f22998ba Mon Sep 17 00:00:00 2001
 From: Grzegorz Placzek <gplaczek@antmicro.com>
 Date: Wed, 12 Apr 2023 12:56:38 +0200
-Subject: [PATCH 11/11] Force `xino=on` on overlay mounts
+Subject: [PATCH 11/12] Force `xino=on` on overlay mounts
 
 ---
  internal/pkg/util/fs/mount/mount_linux.go | 4 ++--

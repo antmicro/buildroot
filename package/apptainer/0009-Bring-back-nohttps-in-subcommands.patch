@@ -1,7 +1,7 @@
 From caaf0984aa31d8292612a6a8f46ec762ade141bf Mon Sep 17 00:00:00 2001
 From: Adam Olech <aolech@antmicro.com>
 Date: Mon, 13 Feb 2023 15:11:56 +0100
-Subject: [PATCH 09/11] Bring back --nohttps in subcommands
+Subject: [PATCH 09/12] Bring back --nohttps in subcommands
 
 ---
  cmd/internal/cli/build.go  | 1 +

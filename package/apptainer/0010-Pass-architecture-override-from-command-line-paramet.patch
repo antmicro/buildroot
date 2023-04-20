@@ -1,7 +1,7 @@
 From db3512c0d9c75f46b4d9c83f5124f817fa839e7d Mon Sep 17 00:00:00 2001
 From: Adam Olech <aolech@antmicro.com>
 Date: Wed, 15 Mar 2023 10:52:59 +0100
-Subject: [PATCH 10/11] Pass architecture override from command-line parameter
+Subject: [PATCH 10/12] Pass architecture override from command-line parameter
 
 ---
  cmd/internal/cli/build.go            | 12 ++++++++++++
