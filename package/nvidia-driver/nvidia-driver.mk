@@ -194,6 +194,8 @@ define NVIDIA_DRIVER_INSTALL_TARGET_CMDS
 			$(TARGET_DIR)/usr/bin/$(p)
 	)
 	$(INSTALL) -D -m 0644 $(@D)/10_nvidia.json $(TARGET_DIR)/usr/share/glvnd/egl_vendor.d/10_nvidia.json
+	$(INSTALL) -D -m 0644 $(@D)/firmware/gsp_ad10x.bin $(TARGET_DIR)/lib/firmware/nvidia/$(NVIDIA_DRIVER_VERSION)/gsp_ad10x.bin
+	$(INSTALL) -D -m 0644 $(@D)/firmware/gsp_tu10x.bin $(TARGET_DIR)/lib/firmware/nvidia/$(NVIDIA_DRIVER_VERSION)/gsp_tu10x.bin
 	ln -sf libglxserver_nvidia.so.$(NVIDIA_DRIVER_VERSION) $(TARGET_DIR)/usr/lib/nvidia/xorg/libglxserver_nvidia.so.1 || true
 	ln -sf libglxserver_nvidia.so.$(NVIDIA_DRIVER_VERSION) $(TARGET_DIR)/usr/lib/nvidia/xorg/libglxserver_nvidia.so || true
 	$(NVIDIA_DRIVER_INSTALL_KERNEL_MODULE)
