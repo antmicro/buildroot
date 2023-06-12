@@ -10,6 +10,7 @@ BASH_STATIC_SITE = $(call github,robxu9,bash-static,$(BASH_STATIC_VERSION))
 BASH_STATIC_LICENSE_FILES = COPYING
 
 define BASH_STATIC_BUILD_CMDS
+	cp -r package/bash-static/patches/ $(@D)/custom
 	cd $(@D) && ./build.sh linux $(BR2_ARCH)
 endef
 

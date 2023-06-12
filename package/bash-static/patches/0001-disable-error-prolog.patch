@@ -1,0 +1,87 @@
+diff --git a/error.c b/error.c
+index 417c902..ba6d97a 100644
+--- a/error.c
++++ b/error.c
+@@ -63,8 +63,6 @@ extern int give_terminal_to __P((pid_t, int));
+ extern const char * const bash_badsub_errmsg;
+ #endif
+ 
+-static void error_prolog __P((int));
+-
+ /* The current maintainer of the shell.  You change this in the
+    Makefile. */
+ #if !defined (MAINTAINER)
+@@ -75,22 +73,6 @@ const char * const the_current_maintainer = MAINTAINER;
+ 
+ int gnu_error_format = 0;
+ 
+-static void
+-error_prolog (print_lineno)
+-     int print_lineno;
+-{
+-  char *ename;
+-  int line;
+-
+-  ename = get_name_for_error ();
+-  line = (print_lineno && interactive_shell == 0) ? executing_line_number () : -1;
+-
+-  if (line > 0)
+-    fprintf (stderr, "%s:%s%d: ", ename, gnu_error_format ? "" : _(" line "), line);
+-  else
+-    fprintf (stderr, "%s: ", ename);
+-}
+-
+ /* Return the name of the shell or the shell script for error reporting. */
+ char *
+ get_name_for_error ()
+@@ -190,8 +172,6 @@ report_error (format, va_alist)
+ {
+   va_list args;
+ 
+-  error_prolog (1);
+-
+   SH_VA_START (args, format);
+ 
+   vfprintf (stderr, format, args);
+@@ -217,8 +197,6 @@ fatal_error (format, va_alist)
+ {
+   va_list args;
+ 
+-  error_prolog (0);
+-
+   SH_VA_START (args, format);
+ 
+   vfprintf (stderr, format, args);
+@@ -239,8 +217,6 @@ internal_error (format, va_alist)
+ {
+   va_list args;
+ 
+-  error_prolog (1);
+-
+   SH_VA_START (args, format);
+ 
+   vfprintf (stderr, format, args);
+@@ -260,7 +236,6 @@ internal_warning (format, va_alist)
+ {
+   va_list args;
+ 
+-  error_prolog (1);
+   fprintf (stderr, _("warning: "));
+ 
+   SH_VA_START (args, format);
+@@ -282,7 +257,6 @@ internal_inform (format, va_alist)
+ {
+   va_list args;
+ 
+-  error_prolog (1);
+   /* TRANSLATORS: this is a prefix for informational messages. */
+   fprintf (stderr, _("INFORM: "));
+ 
+@@ -307,7 +281,6 @@ sys_error (format, va_alist)
+   va_list args;
+ 
+   e = errno;
+-  error_prolog (0);
+ 
+   SH_VA_START (args, format);
+ 
