@@ -105,6 +105,16 @@ COREUTILS_CONF_OPTS += --with-openssl=yes
 COREUTILS_DEPENDENCIES += openssl
 endif
 
+ifeq ($(BR2_STATIC_LIBS),y)
+COREUTILS_CONF_OPTS += --enable-no-install-program=stdbuf
+endif
+
+ifeq ($(BR2_PACKAGE_COREUTILS_DF_ONLY),y)
+define COREUTILS_INSTALL_TARGET_CMDS
+	cd $(@D) && \
+	$(INSTALL) src/df $(TARGET_DIR)/bin/df
+endef
+else
 ifeq ($(BR2_ROOTFS_MERGED_USR),)
 # We want to move a few binaries from /usr/bin to /bin. In the case of
 # coreutils being built as multi-call binary, we do so by re-creating
@@ -128,10 +138,6 @@ endif
 COREUTILS_POST_INSTALL_TARGET_HOOKS += COREUTILS_FIX_BIN_LOCATION
 endif
 
-ifeq ($(BR2_STATIC_LIBS),y)
-COREUTILS_CONF_OPTS += --enable-no-install-program=stdbuf
-endif
-
 # link for archaic shells
 define COREUTILS_CREATE_TEST_SYMLINK
 	ln -fs test $(TARGET_DIR)/usr/bin/[
@@ -150,6 +156,7 @@ define COREUTILS_FIX_CHROOT_LOCATION
 endef
 endif
 COREUTILS_POST_INSTALL_TARGET_HOOKS += COREUTILS_FIX_CHROOT_LOCATION
+endif # BR2_PACKAGE_COREUTILS_DF_ONLY
 
 # Explicitly install ln and realpath, which we *are* insterested in.
 # A lot of other programs still get installed, however, but disabling

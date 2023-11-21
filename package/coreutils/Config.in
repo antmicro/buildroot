@@ -31,6 +31,11 @@ config BR2_PACKAGE_COREUTILS_INDIVIDUAL_BINARIES
 comment "coreutils individual binaries need a toolchain w/ dynamic library"
 	depends on BR2_STATIC_LIBS
 
+config BR2_PACKAGE_COREUTILS_DF_ONLY
+	bool "df only"
+	help
+	  Install only df tool in /bin/df
+
 endif
 
 comment "coreutils needs a toolchain w/ wchar"
