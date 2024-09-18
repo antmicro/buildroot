@@ -1,0 +1,20 @@
+diff --git a/session.c b/session.c
+index 4b155f9..4ec82be 100644
+--- a/session.c
++++ b/session.c
+@@ -37,6 +37,7 @@
+ 
+ #include <sys/types.h>
+ #include <sys/param.h>
++#include <sys/resource.h>
+ #ifdef HAVE_SYS_STAT_H
+ # include <sys/stat.h>
+ #endif
+@@ -1520,6 +1521,7 @@ do_child(struct ssh *ssh, Session *s, const char *command)
+ 	struct passwd *pw = s->pw;
+ 	int r = 0;
+ 
++	setpriority(PRIO_PROCESS, 0, 0);
+ 	sshpkt_fmt_connection_id(ssh, remote_id, sizeof(remote_id));
+ 
+ 	/* remove hostkey from the child's memory */
