@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-QEMU_EFI_AARCH64_VERSION = edk2-stable202005
+QEMU_EFI_AARCH64_VERSION = edk2-stable202408
 QEMU_EFI_AARCH64_SITE_METHOD = git
 QEMU_EFI_AARCH64_SITE = https://github.com/tianocore/edk2
 QEMU_EFI_AARCH64_LICENSE = BSD-2-CLAUSE
