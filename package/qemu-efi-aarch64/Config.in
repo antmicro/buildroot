@@ -2,4 +2,5 @@ config BR2_PACKAGE_QEMU_EFI_AARCH64
 	bool "qemu_efi_aarch64"
 	depends on BR2_x86_64 || BR2_aarch64
 	depends on BR2_TOOLCHAIN_GCC_AT_LEAST_5
+	select BR2_PACKAGE_HOST_UTIL_LINUX
 
