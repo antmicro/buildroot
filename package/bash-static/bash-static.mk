@@ -11,8 +11,8 @@ BASH_STATIC_LICENSE_FILES = COPYING
 
 define BASH_STATIC_BUILD_CMDS
 	cp -r package/bash-static/patches/* $(@D)/custom
-	cp package/bash-static/make.sh $(@D)/make.sh
-	cd $(@D) && ./make.sh $(BR2_ARCH)
+	cp package/bash-static/Makefile $(@D)/Makefile
+	$(MAKE) -C $(@D) ARCH=$(BR2_ARCH)
 endef
 
 define BASH_STATIC_INSTALL_TARGET_CMDS
