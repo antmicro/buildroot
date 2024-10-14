@@ -6,7 +6,7 @@ index 417c902..ba6d97a 100644
  extern const char * const bash_badsub_errmsg;
  #endif
  
--static void error_prolog __P((int));
+-static void error_prolog PARAMS((int));
 -
  /* The current maintainer of the shell.  You change this in the
     Makefile. */
