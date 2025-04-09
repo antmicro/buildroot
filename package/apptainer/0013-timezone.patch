@@ -1,19 +1,38 @@
 diff --git a/internal/pkg/runtime/engine/apptainer/container_linux.go b/internal/pkg/runtime/engine/apptainer/container_linux.go
-index c5233efe1..56a69c9d7 100644
+index c5233efe1..016951288 100644
 --- a/internal/pkg/runtime/engine/apptainer/container_linux.go
 +++ b/internal/pkg/runtime/engine/apptainer/container_linux.go
-@@ -1627,6 +1627,10 @@ func (c *container) addBindsMount(system *mount.System) error {
+@@ -591,6 +591,7 @@ func (c *container) chdirFinal(system *mount.System) error {
+ }
+ 
+ // mount any generic mount (not loop dev)
++//
+ //nolint:maintidx
+ func (c *container) mountGeneric(mnt *mount.Point, tag mount.AuthorizedTag) (err error) {
+ 	flags, opts := mount.ConvertOptions(mnt.Options)
+@@ -1627,11 +1628,17 @@ func (c *container) addBindsMount(system *mount.System) error {
  			}
  		}
  		if !slice.ContainsString(skipBinds, localtimePath) {
+-			if err := system.Points.AddBind(mount.BindsTag, localtimePath, localtimePath, flags, "skip-on-error"); err != nil {
+-				return fmt.Errorf("unable to add %s to mount list: %s", localtimePath, err)
 +			if err := c.copyHostLocaltime(localtimePath); err != nil {
 +				return err
-+			}
-+
- 			if err := system.Points.AddBind(mount.BindsTag, localtimePath, localtimePath, flags, "skip-on-error"); err != nil {
- 				return fmt.Errorf("unable to add %s to mount list: %s", localtimePath, err)
  			}
-@@ -1660,6 +1664,12 @@ func (c *container) addBindsMount(system *mount.System) error {
+-			if err := system.Points.AddRemount(mount.BindsTag, localtimePath, flags); err != nil {
+-				return fmt.Errorf("unable to add %s for remount: %s", localtimePath, err)
++
++			if c.engine.EngineConfig.GetSessionLayer() != apptainer.OverlayLayer {
++				if err := system.Points.AddBind(mount.BindsTag, localtimePath, localtimePath, flags, "skip-on-error"); err != nil {
++					return fmt.Errorf("unable to add %s to mount list: %s", localtimePath, err)
++				}
++				if err := system.Points.AddRemount(mount.BindsTag, localtimePath, flags); err != nil {
++					return fmt.Errorf("unable to add %s for remount: %s", localtimePath, err)
++				}
+ 			}
+ 		}
+ 		return nil
+@@ -1660,6 +1667,15 @@ func (c *container) addBindsMount(system *mount.System) error {
  			bindOpt = "skip-on-error"
  		}
  
@@ -21,12 +40,15 @@ index c5233efe1..56a69c9d7 100644
 +			if err := c.copyHostLocaltime(localtimePath); err != nil {
 +				return err
 +			}
++			if c.engine.EngineConfig.GetSessionLayer() == apptainer.OverlayLayer {
++				continue
++			}
 +		}
 +
  		err := system.Points.AddBind(mount.BindsTag, src, dst, flags, bindOpt)
  		if err != nil {
  			return fmt.Errorf("unable to add %s to mount list: %s", src, err)
-@@ -1672,6 +1682,23 @@ func (c *container) addBindsMount(system *mount.System) error {
+@@ -1672,6 +1688,23 @@ func (c *container) addBindsMount(system *mount.System) error {
  	return nil
  }
  
@@ -35,16 +57,16 @@ index c5233efe1..56a69c9d7 100644
 +// an empty file, it copies the content from the host filesystem if available, just in case of a bind mount failure
 +// (which should be extremely rare)
 +func (c *container) copyHostLocaltime(localtimePath string) error {
-+       if c.engine.EngineConfig.GetSessionLayer() == apptainer.OverlayLayer {
-+               content, err := os.ReadFile(localtimePath)
-+               if err != nil && !errors.Is(err, os.ErrNotExist) {
-+                       return fmt.Errorf("while reading host %s, err: %s", localtimePath, err)
-+               }
-+               if err := c.session.AddFile(filepath.Join(c.session.Layer.Dir(), localtimePath), content); err != nil {
-+                       return fmt.Errorf("while adding file to overlay session folder, err: %s", err)
-+               }
-+       }
-+       return nil
++	if c.engine.EngineConfig.GetSessionLayer() == apptainer.OverlayLayer {
++		content, err := os.ReadFile(localtimePath)
++		if err != nil && !errors.Is(err, os.ErrNotExist) {
++			return fmt.Errorf("while reading host %s, err: %s", localtimePath, err)
++		}
++		if err := c.session.AddFile(filepath.Join(c.session.Layer.Dir(), localtimePath), content); err != nil {
++			return fmt.Errorf("while adding file to overlay session folder, err: %s", err)
++		}
++	}
++	return nil
 +}
 +
  // getHomePaths returns the source and destination path of the requested home mount
